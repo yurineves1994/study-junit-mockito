@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +33,7 @@ public class UserServiceImplTest {
   private UserServiceImpl service;
 
   @Mock
-  private UserRepository userRepository;
+  private UserRepository repository;
 
   @Mock
   private ModelMapper mapper;
@@ -58,13 +59,24 @@ public class UserServiceImplTest {
   }
 
   @Test
-  void findAll() {
+  void whenFindAllThenReturnAnListOfUsers() {
+    when(repository.findAll()).thenReturn(List.of(user));
 
+    List<User> response = service.findAll();
+
+    assertNotNull(response);
+    assertEquals(1, response.size());
+    assertEquals(User.class, response.get(0).getClass());
+    assertEquals(ID, response.get(0).getId());
+    assertEquals(NAME, response.get(0).getName());
+    assertEquals(EMAIL, response.get(0).getEmail());
+    assertEquals(PASSWORD, response.get(0).getPassword());
   }
+
 
   @Test
   void whenFindByIdThenReturnAnUserInstace() {
-   when(userRepository.findById(anyInt())).thenReturn(optionalUser);
+   when(repository.findById(anyInt())).thenReturn(optionalUser);
 
     User response = service.findById(ID);
 
@@ -77,7 +89,7 @@ public class UserServiceImplTest {
 
   @Test
   void whenFindByIdThenReturnAnObjectNotFoundException() {
-   when(userRepository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Usuario não existe!"));
+   when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Usuario não existe!"));
 
    try {
     service.findById(ID);
