@@ -139,6 +139,20 @@ public class UserServiceImplTest {
     assertEquals(PASSWORD, response.getPassword());
   }
 
+  @Test
+  void whenUpdateThenReturnAnDataIntegratyViolationException() {
+    when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+
+    try {
+      optionalUser.get().setId(2);
+      service.create(userDTO);
+    } catch (Exception e) {
+      assertEquals(DataIntegratyViolationException.class, e.getClass());
+      assertEquals("E-mail já cadastrado!", e.getMessage());
+    }
+
+  }
+
   private void startUser() {
     user = new User(ID, NAME, EMAIL, PASSWORD);
     userDTO = new UserDTO(ID, NAME, EMAIL, PASSWORD);
