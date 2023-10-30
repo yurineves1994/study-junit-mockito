@@ -50,8 +50,14 @@ public class UserControllerTest {
   }
 
   @Test
-  void createUser() {
+  void whenCreateThenReturnCreated() {
+    when(service.create(any())).thenReturn(user);
 
+    ResponseEntity<UserDTO> response = controller.create(userDTO);
+
+    assertEquals(ResponseEntity.class, response.getClass());
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    assertNotNull(response.getHeaders().getLocation());
   }
 
   @Test
