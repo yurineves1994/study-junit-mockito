@@ -42,10 +42,10 @@ public class UserController {
   }
 
   @PutMapping(ID)
-  public ResponseEntity<User> upgradeUser(@PathVariable Integer id, @RequestBody @Valid UserDTO user) {
+  public ResponseEntity<UserDTO> update(@PathVariable Integer id, @RequestBody @Valid UserDTO user) {
     user.setId(id);
 
-    return ResponseEntity.ok().body(mapper.map(service.update(user), User.class));
+    return ResponseEntity.ok().body(mapper.map(service.update(user), UserDTO.class));
   }
 
   @GetMapping(value = ID)
