@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
   private UserRepository userRepository;
 
@@ -26,16 +26,13 @@ public class UserServiceImpl implements UserService{
     return userRepository.findAll();
   }
 
-  public User findByEmail(String email) {
-    Optional<User> user = userRepository.findByEmail(email);
-    return user.orElse(null);
-  }
-
+  @Override
   public User findById(Integer id) {
     Optional<User> user = userRepository.findById(id);
     return user.orElseThrow(() -> new ObjectNotFoundException("Usuario não existe!"));
   }
 
+  @Override
   public User create(UserDTO dto) {
     findByEmail(dto);
     return userRepository.save(mapper.map(dto, User.class));
@@ -44,9 +41,15 @@ public class UserServiceImpl implements UserService{
   private void findByEmail(UserDTO user) {
     Optional<User> userExists = userRepository.findByEmail(user.getEmail());
 
-    if(userExists.isPresent()) {
+    if (userExists.isPresent() && !userExists.get().getId().equals(user.getId())) {
       throw new DataIntegratyViolationException("E-mail já cadastrado!");
     }
+  }
+
+  @Override
+  public User update(UserDTO user) {
+    findByEmail(user);
+    return userRepository.save(mapper.map(user, User.class));
   }
 
 }
