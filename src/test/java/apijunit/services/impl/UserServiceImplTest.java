@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import apijunit.entities.User;
 import apijunit.entities.dtos.UserDTO;
 import apijunit.repositories.UserRepository;
+import apijunit.services.exceptions.ObjectNotFoundException;
 
 @SpringBootTest
 public class UserServiceImplTest {
@@ -72,6 +73,19 @@ public class UserServiceImplTest {
    assertEquals(ID, response.getId());
    assertEquals(NAME, response.getName());
    assertEquals(EMAIL, response.getEmail());
+  }
+
+  @Test
+  void whenFindByIdThenReturnAnObjectNotFoundException() {
+   when(userRepository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Usuario não existe!"));
+
+   try {
+    service.findById(ID);
+   } catch (Exception ex) {
+    assertEquals(ObjectNotFoundException.class, ex.getClass());
+    assertEquals("Usuario não existe!", ex.getMessage());
+   }
+   
   }
 
   @Test
