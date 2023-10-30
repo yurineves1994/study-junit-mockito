@@ -91,6 +91,17 @@ public class UserServiceImplTest {
   }
 
   @Test
+  void deleteWithObjectNotFoundException() {
+    when(repository.findById(ID)).thenThrow(new ObjectNotFoundException("Usuario não existe!"));
+    try {
+      service.delete(ID);
+    } catch (Exception ex) {
+      assertEquals(ObjectNotFoundException.class, ex.getClass());
+      assertEquals("Usuario não existe!", ex.getMessage());
+    }
+  }
+
+  @Test
   void whenFindAllThenReturnAnListOfUsers() {
     when(repository.findAll()).thenReturn(List.of(user));
 
