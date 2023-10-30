@@ -16,6 +16,6 @@ public class UserDTO {
         private String name;
         private String email;
 
-        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // permite que seja acesso para escrita porém bloqueia a leitura
         private String password;
 }
