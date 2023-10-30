@@ -71,7 +71,7 @@ public class UserServiceImplTest {
 
     try {
       optionalUser.get().setId(2);
-      User response = service.create(userDTO);
+      service.create(userDTO);
     } catch (Exception e) {
       assertEquals(DataIntegratyViolationException.class, e.getClass());
       assertEquals("E-mail já cadastrado!", e.getMessage());
